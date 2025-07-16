@@ -1,23 +1,19 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.google.hilt.android)
 }
 
 android {
-    namespace = "com.skp.irasystems"
+    namespace = "com.skp.irasystems.logger"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.skp.irasystems"
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -36,32 +32,23 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
 
-    val composeBom = platform(libs.androidx.compose.bom)
-
     implementation(libs.androidx.core.ktx)
-    implementation(composeBom)
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.jetpack.activity.compose)
-    implementation(libs.jetpack.lifecycle.runtime.ktx)
+    implementation(libs.jetpack.room.runtime)
+    implementation(libs.jetpack.room.ktx)
+    ksp(libs.jetpack.room.compiler)
+    implementation(libs.jetpack.work.runtime.ktx)
+    implementation(libs.jetpack.hilt.work)
     implementation(libs.google.hilt.android)
     ksp(libs.google.hilt.compiler)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.square.retrofit)
+    implementation(libs.square.retrofit.converter.moshi)
+    implementation(libs.kotlinx.coroutines.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(composeBom)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(project(":logger"))
 }
